@@ -1,0 +1,1280 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   NEXORA AI — DESIGN SYSTEM (master spec §2)
+   Dark-first, glassy frosted-crystal texture.
+   Raw tokens live on :root (dark is default); light theme overrides them
+   under [data-theme="light"]. Tailwind utilities are mapped via @theme inline
+   so utilities like bg-bg-1, text-text-1, border-line, shadow-glass work.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg-0: #07070b; /* page background */
+  --bg-1: #0c0c12; /* sections */
+  --bg-2: #12121a; /* cards base */
+  --bg-3: #1a1a25; /* raised */
+
+  /* Lines */
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --text-0: #f4f4f8;
+  --text-1: #b7b7c6;
+  --text-2: #7c7c90;
+
+  /* Accents + status */
+  --violet: #8b5cf6;
+  --indigo: #6366f1;
+  --blue: #3b82f6;
+  --success: #22c55e;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-hover: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 18px;
+
+  /* Radii (mapped over Tailwind's radius scale below) */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Shadows + gradients */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --grad-accent: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-0: #f6f6fa;
+  --bg-1: #fdfdff;
+  --bg-2: #ffffff;
+  --bg-3: #efeff6;
+
+  --line: rgba(12, 12, 32, 0.08);
+  --line-strong: rgba(12, 12, 32, 0.18);
+
+  --text-0: #131320;
+  --text-1: #43435a;
+  --text-2: #6a6a85;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-hover: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(12, 12, 32, 0.1);
+
+  --shadow-glass: 0 8px 32px rgba(19, 19, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   Tailwind theme mapping (§2.2 — tokens mapped into the Tailwind config).
+   `inline` = utilities reference the raw :root vars directly, so runtime
+   theme switching works and opacity modifiers (e.g. bg-violet/20) resolve.
+   -------------------------------------------------------------------------- */
+@theme inline {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text-0: var(--text-0);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-violet: var(--violet);
+  --color-indigo: var(--indigo);
+  --color-blue: var(--blue);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-glass: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-geist-mono);
+
+  --shadow-glass: var(--shadow-glass);
+  --background-image-grad-accent: var(--grad-accent);
+}
+
+/* Static (non theme-switched) values */
+@theme {
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --breakpoint-3xs: 22.5rem; /* 360px */
+
+  /* Background orb drift (§2.3) — slow, transform-only, disabled on reduced motion */
+  --animate-drift-a: drift-a 38s ease-in-out infinite alternate;
+  --animate-drift-b: drift-b 46s ease-in-out infinite alternate;
+  --animate-drift-c: drift-c 54s ease-in-out infinite alternate;
+
+  /* Overlay / dialog / accordion motion (§2.5) */
+  --animate-overlay-in: overlay-in 200ms ease-out;
+  --animate-content-in: content-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-down: accordion-down 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-up: accordion-up 200ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes drift-a {
+    from {
+      transform: translate3d(-3%, -2%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(4%, 4%, 0) scale(1.1);
+    }
+  }
+  @keyframes drift-b {
+    from {
+      transform: translate3d(3%, 3%, 0) scale(1.05);
+    }
+    to {
+      transform: translate3d(-4%, -3%, 0) scale(0.96);
+    }
+  }
+  @keyframes drift-c {
+    from {
+      transform: translate3d(0%, 4%, 0) scale(0.98);
+    }
+    to {
+      transform: translate3d(3%, -4%, 0) scale(1.08);
+    }
+  }
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes content-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Base layer
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2 {
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--violet) 35%, transparent);
+    color: var(--text-0);
+  }
+
+  /* Visible violet focus rings everywhere by default (§2.7) */
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--violet) 80%, transparent);
+    outline-offset: 2px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Glass texture system (§2.3) — reusable utilities, live in the utilities
+   layer so they compose with variants (hover:, md:, etc.).
+   -------------------------------------------------------------------------- */
+@utility glass {
+  background-color: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Higher opacity for modals, dropdowns, command palette */
+@utility glass-strong {
+  background-color: color-mix(in srgb, var(--bg-2) 88%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+}
+
+/* Gradient hairline rim that fakes light catching the glass edge */
+@utility glass-edge {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.03) 30%,
+      transparent 60%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* Interactive glass surface (cards, list rows) */
+@utility glass-interactive {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease;
+
+  &:hover {
+    background-color: var(--glass-bg-hover);
+  }
+}
+
+/* Subtle frosted grain overlay — apply to an absolutely positioned div */
+@utility noise {
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='160'%20height='160'%20filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Very soft radial violet/blue light — position/size inline; use sparingly */
+@utility glow-soft {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.26), transparent 72%);
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+/* Faint grid pattern — pair with an inline radial mask-image */
+@utility bg-grid-faint {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Shared page container */
+@utility nx-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Fallbacks + reduced motion (§2.3, §2.5)
+   -------------------------------------------------------------------------- */
+@supports not (
+  (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))
+) {
+  .glass {
+    background-color: color-mix(in srgb, var(--bg-2) 92%, transparent);
+  }
+  .glass-strong {
+    background-color: var(--bg-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-drift-a,
+  .animate-drift-b,
+  .animate-drift-c {
+    animation: none;
+  }
+}
+
+/* Homepage model-routing showcase */
+.nx-button-shine {
+  --nx-button-x: 50%;
+  --nx-button-y: 50%;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(164, 205, 255, 0.45);
+  background-color: #2865ed;
+  background-image:
+    radial-gradient(150px circle at var(--nx-button-x) var(--nx-button-y), rgba(255, 255, 255, 0.36), transparent 72%),
+    linear-gradient(112deg, #2463eb 0%, #347df2 48%, #655cf6 100%);
+  box-shadow: 0 7px 28px rgba(37, 99, 235, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.nx-button-shine:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.12) brightness(1.06);
+  box-shadow: 0 10px 34px rgba(37, 99, 235, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.nx-button-shine:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.nx-routing-panel {
+  --nx-cursor-x: -100px;
+  --nx-cursor-y: -100px;
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(61, 96, 224, 0.18), transparent 55%),
+    color-mix(in srgb, var(--bg-1) 82%, transparent);
+  border-color: color-mix(in srgb, var(--blue) 22%, var(--glass-border));
+}
+
+.nx-routing-grid {
+  background-image:
+    linear-gradient(to right, rgba(119, 145, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(119, 145, 255, 0.045) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 78% 72% at 50% 48%, #000 18%, transparent 100%);
+}
+
+.nx-routing-pointer-glow {
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--nx-cursor-x) var(--nx-cursor-y), rgba(59, 130, 246, 0.18), transparent 76%);
+  transition: opacity 180ms ease;
+}
+
+.nx-routing-panel[data-pointer-active="true"] .nx-routing-pointer-glow,
+.nx-routing-panel[data-pointer-active="true"] .nx-routing-cursor {
+  opacity: 1;
+}
+
+.nx-routing-cursor {
+  position: absolute;
+  z-index: 2;
+  top: var(--nx-cursor-y);
+  left: var(--nx-cursor-x);
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(154, 196, 255, 0.85);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.48), inset 0 0 10px rgba(59, 130, 246, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.nx-routing-map {
+  height: 370px;
+}
+
+.nx-routing-lines {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nx-routing-path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.nx-routing-path-soft {
+  stroke: rgba(112, 139, 255, 0.24);
+  stroke-width: 1;
+}
+
+.nx-routing-path-pulse {
+  stroke: url(#nx-route-gradient);
+  stroke-width: 1.5;
+  stroke-dasharray: 1.5 2.8;
+  animation: nx-route-flow 2.4s linear infinite;
+}
+
+.nx-routing-path-pulse:nth-of-type(4n) {
+  animation-delay: -1.1s;
+}
+
+.nx-route-node {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  width: clamp(6.25rem, 24%, 15.5rem);
+  min-height: 56px;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-color: rgba(169, 183, 255, 0.12);
+  border-radius: 13px;
+  background-color: color-mix(in srgb, var(--bg-2) 87%, transparent);
+  background-image: radial-gradient(100px circle at var(--nx-node-x, 50%) var(--nx-node-y, 50%), rgba(65, 122, 255, 0.16), transparent 72%);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: var(--text-0);
+  text-align: left;
+  text-decoration: none;
+  transform: translateY(-50%);
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.nx-route-node:hover {
+  border-color: rgba(110, 158, 255, 0.4);
+  background-color: color-mix(in srgb, var(--bg-3) 92%, transparent);
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.13), 0 10px 26px rgba(0, 0, 0, 0.2);
+}
+
+.nx-route-node-left { left: 2%; }
+.nx-route-node-right { right: 2%; }
+
+.nx-route-input-icon,
+.nx-route-more-icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 1px solid rgba(115, 148, 255, 0.16);
+  border-radius: 9px;
+  background: rgba(65, 91, 188, 0.12);
+  color: #91b8ff;
+}
+
+.nx-route-model-logo {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  padding: 5px;
+}
+
+.nx-route-node-title,
+.nx-route-node-detail {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nx-route-node-title {
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.nx-route-node-detail {
+  margin-top: 3px;
+  color: var(--text-2);
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.nx-route-more-icon {
+  color: #aaa1ff;
+  background: rgba(139, 92, 246, 0.13);
+}
+
+.nx-routing-hub {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: clamp(8rem, 20%, 12.5rem);
+  min-height: 148px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(127, 164, 255, 0.42);
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(58, 121, 255, 0.28), transparent 68%),
+    color-mix(in srgb, var(--bg-2) 96%, transparent);
+  box-shadow: 0 0 44px rgba(44, 99, 255, 0.18), 0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: var(--text-0);
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.nx-routing-hub:hover {
+  border-color: rgba(139, 180, 255, 0.74);
+  box-shadow: 0 0 58px rgba(44, 99, 255, 0.28), 0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translate(-50%, -50%) scale(1.025);
+}
+
+.nx-routing-hub-mark {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(178, 194, 255, 0.2);
+  border-radius: 12px;
+  background: #090912;
+  box-shadow: 0 0 24px rgba(123, 93, 255, 0.25);
+}
+
+.nx-routing-hub-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nx-routing-hub-name {
+  margin-top: 8px;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.nx-routing-hub-caption {
+  margin-top: 3px;
+  color: var(--text-2);
+  font-size: 9px;
+}
+
+.nx-routing-hub-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 9px;
+  color: #9dc1ff;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* Seamless tool marquee — two identical groups; one loop = one group width */
+.nx-model-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.nx-model-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: nx-model-loop 70s linear infinite;
+  will-change: transform;
+}
+
+.nx-model-marquee-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding-right: 10px;
+  list-style: none;
+}
+
+.nx-tool-chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  max-width: 230px;
+  padding: 8px 16px 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg-2) 76%, transparent);
+  color: var(--text-1);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.nx-tool-chip > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nx-tool-chip:hover {
+  border-color: color-mix(in srgb, var(--blue) 45%, var(--line));
+  background: var(--glass-bg-hover);
+}
+
+.nx-tool-mark {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  place-items: center;
+  border: 1px solid rgba(151, 158, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(106, 95, 216, 0.16);
+  color: #b6aaff;
+}
+
+.nx-tool-mark svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes nx-route-flow {
+  to { stroke-dashoffset: -18; }
+}
+
+@keyframes nx-model-loop {
+  to { transform: translateX(-50%); }
+}
+
+@media (hover: hover) {
+  .nx-model-marquee:hover .nx-model-marquee-track,
+  .nx-model-marquee:focus-within .nx-model-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (max-width: 639px) {
+  .nx-routing-map { height: 330px; }
+  .nx-route-node {
+    width: clamp(6.1rem, 28%, 7.8rem);
+    min-height: 49px;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 10px;
+  }
+  .nx-route-input-icon,
+  .nx-route-more-icon,
+  .nx-route-model-logo {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+    border-radius: 7px;
+    padding: 3px;
+  }
+  .nx-route-node-title { font-size: 9px; }
+  .nx-route-node-detail { font-size: 8px; }
+  .nx-routing-hub { width: 7.6rem; min-height: 126px; border-radius: 16px; }
+  .nx-routing-hub-mark { width: 31px; height: 31px; }
+  .nx-routing-hub-name { font-size: 9px; }
+  .nx-routing-hub-caption,
+  .nx-routing-hub-link { font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-button-shine,
+  .nx-route-node,
+  .nx-routing-hub {
+    transition: none;
+  }
+  .nx-routing-path-pulse,
+  .nx-model-marquee-track {
+    animation: none;
+  }
+  .nx-model-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+}
+
+/* Reference-style live routing stage: dev tools → NEXORAO gateway → models */
+.nx-live-section {
+  padding-top: 1.1rem;
+  padding-bottom: 1rem;
+}
+
+.nx-live-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 auto 10px;
+  max-width: 1040px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.nx-live-heading p {
+  margin: 0;
+  color: var(--text-0);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.nx-live-routing {
+  --nx-live-x: -100px;
+  --nx-live-y: -100px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  contain: layout paint;
+  max-width: 1040px;
+  margin: 0 auto;
+  border-radius: 26px;
+  background:
+    radial-gradient(ellipse at 49% 52%, rgba(34, 111, 255, 0.12), transparent 38%),
+    radial-gradient(ellipse at 17% 44%, rgba(106, 61, 222, 0.12), transparent 31%),
+    radial-gradient(ellipse at 84% 48%, rgba(25, 177, 222, 0.1), transparent 29%);
+}
+
+.nx-live-grid,
+.nx-live-glow {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nx-live-grid {
+  opacity: 0.48;
+  background-image: radial-gradient(circle, rgba(148, 126, 255, 0.62) 1.15px, transparent 1.45px);
+  background-position: center;
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 56% 66% at 51% 50%, #000 0, transparent 100%);
+}
+
+.nx-live-glow {
+  opacity: 0;
+  background: radial-gradient(300px circle at var(--nx-live-x) var(--nx-live-y), rgba(74, 133, 255, 0.16), transparent 76%);
+  transition: opacity 180ms ease;
+}
+
+.nx-live-routing[data-pointer-active="true"] .nx-live-glow,
+.nx-live-routing[data-pointer-active="true"] .nx-live-cursor {
+  opacity: 1;
+}
+
+.nx-live-cursor {
+  position: absolute;
+  z-index: 5;
+  top: var(--nx-live-y);
+  left: var(--nx-live-x);
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(162, 196, 255, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(74, 133, 255, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.nx-live-canvas {
+  position: relative;
+  width: 100%;
+  height: 505px;
+}
+
+.nx-live-wires {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.nx-live-wire {
+  fill: none;
+  stroke: rgba(136, 141, 255, 0.27);
+  stroke-width: 1.4px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 180ms ease, stroke-width 180ms ease;
+}
+
+.nx-live-wire.is-selected {
+  stroke: url(#nx-live-gradient);
+  stroke-width: 2px;
+  opacity: 1;
+}
+
+/* Traveling light that transfers along the selected model's wire */
+.nx-live-wire-comet {
+  fill: none;
+  stroke: url(#nx-live-gradient);
+  stroke-width: 3px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 0 18 4 21;
+  animation: nx-live-current 1.65s linear infinite;
+}
+
+/* One full dash period per loop keeps the light flowing with no visible reset */
+@keyframes nx-live-current {
+  to { stroke-dashoffset: -43; }
+}
+
+.nx-live-source,
+.nx-live-model {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  min-height: 50px;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 1px solid rgba(162, 171, 218, 0.13);
+  border-radius: 15px;
+  background: rgba(17, 17, 27, 0.88);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  color: var(--text-0);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  transform: translateY(-50%);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  animation: nx-live-bob 6.5s ease-in-out infinite alternate;
+}
+
+/* Gentle drift so both columns float like the reference stage */
+@keyframes nx-live-bob {
+  to { translate: 0 -7px; }
+}
+
+.nx-live-source {
+  left: 2%;
+  width: clamp(8.5rem, 19%, 13rem);
+  cursor: default;
+}
+
+.nx-live-model {
+  left: 71%;
+  right: auto;
+  width: clamp(14rem, 26%, 17rem);
+  padding-right: 27px;
+}
+
+.nx-live-source:hover,
+.nx-live-model:hover {
+  border-color: rgba(120, 155, 255, 0.5);
+  background-color: rgba(25, 28, 46, 0.96);
+  box-shadow: 0 0 24px rgba(67, 117, 255, 0.2), 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.nx-live-source.is-selected,
+.nx-live-model.is-selected {
+  border-color: rgba(117, 126, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(111, 107, 255, 0.38), 0 0 26px rgba(75, 112, 255, 0.24);
+}
+
+.nx-live-tool-mark {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  place-items: center;
+  border: 1px solid rgba(151, 158, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(106, 95, 216, 0.16);
+  color: #b6aaff;
+}
+
+.nx-live-tool-mark svg {
+  width: 16px;
+  height: 16px;
+}
+
+.nx-live-node-copy {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.nx-live-node-title,
+.nx-live-node-detail {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nx-live-node-title {
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.nx-live-node-detail {
+  margin-top: 3px;
+  color: var(--text-2);
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.nx-live-price {
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-right: 22px;
+  color: #9fe3c8;
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.nx-live-gateway {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 45%;
+  width: clamp(20rem, 38%, 30rem);
+  min-height: 220px;
+  padding: 16px;
+  border: 1px solid rgba(114, 147, 255, 0.42);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 48% 0%, rgba(64, 105, 255, 0.25), transparent 68%),
+    rgba(14, 14, 24, 0.96);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45), 0 0 46px rgba(66, 104, 255, 0.2), inset 0 1px rgba(255, 255, 255, 0.08);
+  transform: translate(-50%, -50%);
+}
+
+.nx-live-gateway-header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.nx-live-brand-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(159, 172, 255, 0.25);
+  border-radius: 12px;
+  background: #080810;
+  box-shadow: 0 0 22px rgba(135, 86, 255, 0.23);
+}
+
+.nx-live-brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nx-live-brand-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nx-live-brand-copy strong {
+  color: var(--text-0);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.nx-live-brand-copy small {
+  color: var(--text-2);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+}
+
+.nx-live-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(114, 219, 191, 0.18);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: rgba(35, 185, 145, 0.09);
+  color: #8be5c4;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.nx-live-preview-badge span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #43dfad;
+  box-shadow: 0 0 10px rgba(67, 223, 173, 0.8);
+}
+
+.nx-live-code-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 10px;
+  padding: 12px;
+  border: 1px solid rgba(155, 163, 216, 0.1);
+  border-radius: 13px;
+  background: rgba(5, 6, 12, 0.8);
+  color: #e4e5f1;
+  font-family: var(--font-mono), Consolas, monospace;
+  font-size: 10px;
+}
+
+.nx-live-method {
+  color: #72dcb8;
+  font-weight: 700;
+}
+
+.nx-live-code-muted {
+  color: #85889f;
+}
+
+.nx-live-code-block strong {
+  color: #bdc7ff;
+  font-weight: 500;
+}
+
+/* Typed model id line: one nowrap line with a live terminal caret */
+.nx-live-code-block .nx-live-model-line {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.nx-live-typed-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(35, 185, 145, 0.16);
+  color: #43dfad;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  vertical-align: 1px;
+}
+
+.nx-live-caret {
+  display: inline-block;
+  width: 7px;
+  height: 12px;
+  margin-left: 3px;
+  border-radius: 1px;
+  background: #72dcb8;
+  vertical-align: -2px;
+  animation: nx-caret-blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes nx-caret-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
+/* Request status row: muted while routing, bright green once the call lands */
+.nx-live-code-block .nx-live-status {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #85889f;
+}
+
+.nx-live-code-block .nx-live-status.is-ok {
+  color: #dfe3f2;
+}
+
+.nx-live-status-ok {
+  color: #43dfad;
+  font-weight: 700;
+}
+
+.nx-live-gateway-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.nx-live-gateway-footer span {
+  border: 1px solid rgba(155, 163, 216, 0.15);
+  border-radius: 7px;
+  padding: 4px 7px;
+  color: #b0b2c5;
+  font-size: 9px;
+}
+
+.nx-live-model-logo {
+  width: 31px !important;
+  height: 31px !important;
+  flex: 0 0 31px;
+  padding: 4px !important;
+  border-radius: 10px !important;
+}
+
+.nx-live-selected-tag {
+  position: absolute;
+  top: -8px;
+  right: -1px;
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: #39d5ab;
+  color: #06120f;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.nx-live-model-arrow {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  translate: 0 -50%;
+  width: 13px;
+  height: 13px;
+  color: #8e91a5;
+  opacity: 0.72;
+}
+
+.nx-live-model.is-selected .nx-live-model-arrow {
+  color: #dfe6ff;
+  opacity: 1;
+}
+
+.nx-live-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px auto 0;
+  color: var(--text-2);
+  font-size: 11px;
+  text-align: center;
+}
+
+.nx-live-caption svg {
+  width: 14px;
+  height: 14px;
+  color: #9c8cff;
+}
+
+@media (max-width: 950px) {
+  .nx-live-canvas {
+    display: grid;
+    height: auto !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .nx-live-wires { display: none; }
+
+  .nx-live-source,
+  .nx-live-model {
+    position: relative;
+    top: auto !important;
+    right: auto;
+    left: auto !important;
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    gap: 6px;
+    padding: 6px;
+    transform: none;
+    animation: none;
+  }
+
+  .nx-live-model { padding-right: 23px; }
+
+  .nx-live-gateway {
+    position: relative;
+    top: auto;
+    left: auto;
+    order: -1;
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 0;
+    transform: none;
+    padding: 13px;
+  }
+
+  .nx-live-tool-mark,
+  .nx-live-model-logo {
+    width: 26px !important;
+    height: 26px !important;
+    flex-basis: 26px;
+    border-radius: 8px !important;
+  }
+
+  .nx-live-tool-mark svg { width: 14px; height: 14px; }
+}
+
+@media (max-width: 639px) {
+  .nx-live-section { padding-top: 1rem; }
+  .nx-live-heading { align-items: flex-start; flex-direction: column; gap: 4px; padding: 0 4px; }
+  .nx-live-heading span { font-size: 11px; }
+  .nx-live-routing { border: 1px solid rgba(162, 171, 218, 0.12); border-radius: 20px; }
+  .nx-live-canvas { display: grid; height: auto; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+  .nx-live-wires { display: none; }
+  .nx-live-source,
+  .nx-live-model { position: relative; top: auto !important; right: auto; left: auto; width: 100%; min-height: 46px; gap: 6px; padding: 6px; border-radius: 12px; transform: none; }
+  .nx-live-gateway { position: relative; top: auto; left: auto; order: -1; grid-column: 1 / -1; width: 100%; min-height: 0; padding: 13px; border-radius: 17px; transform: none; }
+  .nx-live-model { padding-right: 20px; }
+  .nx-live-tool-mark,
+  .nx-live-model-logo { width: 26px !important; height: 26px !important; flex-basis: 26px; border-radius: 8px !important; }
+  .nx-live-tool-mark svg { width: 14px; height: 14px; }
+  .nx-live-node-title { font-size: 9px; }
+  .nx-live-node-detail { font-size: 8px; }
+  .nx-live-brand-mark { width: 32px; height: 32px; flex-basis: 32px; }
+  .nx-live-brand-copy strong { font-size: 11px; }
+  .nx-live-code-block { font-size: 9px; }
+  .nx-live-model-arrow { right: 5px; width: 11px; height: 11px; }
+  .nx-live-caption { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-live-wire.is-selected { transition: none; }
+  .nx-live-wire-comet { animation: none; opacity: 0; }
+  .nx-live-caret { animation: none; }
+  .nx-live-source,
+  .nx-live-model,
+  .nx-live-glow,
+  .nx-live-cursor { transition: none; animation: none; }
+}
