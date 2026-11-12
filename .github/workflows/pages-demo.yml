@@ -48,7 +48,9 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          # With output: "export", a custom distDir IS the export destination
+          # (build artifacts stay in .next). Our distDir is ".next-export".
+          path: .next-export
 
   deploy:
     runs-on: ubuntu-latest
