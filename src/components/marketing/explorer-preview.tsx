@@ -3,12 +3,19 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { Reveal } from "@/components/marketing/reveal";
 import { ModelCard } from "@/components/models/model-card";
+import { MODELS, type ModelEntry } from "@/data/models";
 import { listModelCatalog } from "@/lib/models/registry";
 
 const PREVIEW_IDS = ["claude-sonnet-5-5", "gpt-6.1-terra", "claude-haiku-5-5"];
 
 export async function ExplorerPreview() {
-  const registry = await listModelCatalog();
+  let registry: ModelEntry[];
+  try {
+    registry = await listModelCatalog();
+  } catch {
+    // Static/preview builds have no database — fall back to the bundled catalog.
+    registry = MODELS.filter((model) => model.status !== "deprecated");
+  }
   const models = PREVIEW_IDS
     .map((id) => registry.find((model) => model.id === id))
     .filter((model) => model !== undefined);

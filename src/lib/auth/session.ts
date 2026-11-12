@@ -1,7 +1,6 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { cacheLife } from "next/cache";
 import { and, eq, gt, isNull, ne } from "drizzle-orm";
 import { db } from "@/db";
 import { sessions, users, userRoles, type User } from "@/db/schema";
@@ -75,9 +74,9 @@ async function loadSessionUser(token: string): Promise<SessionUser | null> {
  * the authenticated shell. No DB hit at all for guests.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
-  "use cache: private";
-  cacheLife({ stale: 30 });
-
+  // NOTE(demo branch): "use cache: private" / cacheLife removed — the static
+  // export build runs with cacheComponents disabled, where the directive does
+  // not compile. The per-request cached wrapper stays on the main branch.
   const token = await findSessionToken();
   if (!token) return null;
   return loadSessionUser(token);

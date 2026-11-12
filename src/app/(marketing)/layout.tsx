@@ -17,6 +17,10 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
 }
 
 async function SessionAwareSiteHeader() {
+  if (process.env.NEXORAO_STATIC_EXPORT === "1") {
+    // Static preview builds have no database or request cookies available.
+    return <SiteHeader isAuthenticated={false} />;
+  }
   const user = await getSessionUser();
   return <SiteHeader isAuthenticated={Boolean(user)} />;
 }

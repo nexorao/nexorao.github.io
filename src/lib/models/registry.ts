@@ -1,6 +1,8 @@
 import "server-only";
-import { cacheLife, cacheTag } from "next/cache";
 import { asc, eq } from "drizzle-orm";
+// NOTE(demo branch): "use cache" / cacheLife / cacheTag removed — the static
+// export build runs with cacheComponents disabled, where the directive does
+// not compile. The database-backed cache wrapper stays on the main branch.
 import { db } from "@/db";
 import {
   modelPricing,
@@ -63,9 +65,6 @@ export async function listRegistryModels(): Promise<RegistryModelRow[]> {
 }
 
 async function selectModels() {
-  "use cache";
-  cacheLife({ stale: 60, revalidate: 300, expire: 1800 });
-  cacheTag("model-catalog");
   return db
     .select({
       id: models.id,

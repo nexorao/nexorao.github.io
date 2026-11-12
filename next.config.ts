@@ -4,15 +4,21 @@ const nextConfig: NextConfig = {
   /* config options here */
   // Hides Next.js' development-only compile/render badge without hiding real errors.
   devIndicators: false,
-  cacheComponents: true,
-  partialPrefetching: true,
-  output: "standalone",
-  distDir: process.env.NEXORAO_DIST_DIR ?? ".next",
+  cacheComponents: process.env.NEXORAO_STATIC_EXPORT !== "1",
+  partialPrefetching: process.env.NEXORAO_STATIC_EXPORT !== "1",
+  // NEXORAO_STATIC_EXPORT=1 produces a fully static build for GitHub Pages.
+  // Marketing pages fall back to the bundled model catalog without a database.
+  output: process.env.NEXORAO_STATIC_EXPORT === "1" ? "export" : "standalone",
   images: {
     // Provider brand marks are local, audited SVG assets under /brand/models.
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    ...(process.env.NEXORAO_STATIC_EXPORT === "1" ? { unoptimized: true } : {}),
   },
+  distDir:
+    process.env.NEXORAO_STATIC_EXPORT === "1"
+      ? ".next-export"
+      : (process.env.NEXORAO_DIST_DIR ?? ".next"),
   async headers() {
     const devEval = process.env.NODE_ENV === "production" ? "" : " 'unsafe-eval'";
     const securityHeaders = [

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MODELS, type ModelEntry } from "@/data/models";
 import { ModelExplorer } from "@/components/models/model-explorer";
 import { listModelCatalog } from "@/lib/models/registry";
 
@@ -15,7 +16,13 @@ export default function ModelsPage() {
 }
 
 async function ModelCatalog() {
-  const models = await listModelCatalog();
+  let models: ModelEntry[];
+  try {
+    models = await listModelCatalog();
+  } catch {
+    // Static/preview builds have no database — fall back to the bundled catalog.
+    models = MODELS.filter((model) => model.status !== "deprecated");
+  }
   const providers = new Set(models.map((model) => model.provider));
   const maxContext = Math.max(0, ...models.map((model) => model.contextWindow ?? 0));
   const minimumInputPrice = models.reduce<number | null>((lowest, model) => {
